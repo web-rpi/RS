@@ -284,15 +284,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-    
+          uses: actions/checkout@v4
         - name: 🛠️ Install build dependencies and cross compiler
-        run: |
+          run: |
             sudo apt update
             sudo apt install -y build-essential gcc-arm-linux-gnueabihf
     
         - name: 🔧 Cross-compile for ARMv7 (RaspberryPi 3 / 4)
-        run: |
+          run: |
             export CC=arm-linux-gnueabihf-gcc
             
             # Vaisala Dropsonde #
@@ -391,8 +390,8 @@ jobs:
             $CC ./scan/scan_fft_simple.c -lm -o ./scan/scan_fft_simple
     
         - name: 📦 Archive ARMv7 binaries
-        uses: actions/upload-artifact@v4
-        with:
+          uses: actions/upload-artifact@v4
+          with:
             name: armv7-binaries
             path: |
               ./dropsonde/rd41drop
@@ -440,4 +439,3 @@ jobs:
               ./scan/rs_detect
               ./scan/scan_fft_pow
               ./scan/scan_fft_simple
-    

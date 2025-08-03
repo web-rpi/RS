@@ -278,3 +278,166 @@ jobs:
         name: windows-binaries
         path: |
           ./**/*.exe
+
+### BUILD ARMv7 (RaspberryPi 3/4) ###
+   build-armv7:
+    runs-on: ubuntu-latest
+    steps:
+        - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+    
+        - name: 🛠️ Install build dependencies and cross compiler
+        run: |
+            sudo apt update
+            sudo apt install -y build-essential gcc-arm-linux-gnueabihf
+    
+        - name: 🔧 Cross-compile for ARMv7 (RaspberryPi 3 / 4)
+        run: |
+            export CC=arm-linux-gnueabihf-gcc
+            
+            # Vaisala Dropsonde #
+            $CC ./dropsonde/rd41drop.c -lm -o ./dropsonde/rd41drop
+            $CC ./dropsonde/rd94drop.c -lm -o ./dropsonde/rd94drop
+            
+            # Meteolabor SRS-C3450
+            $CC ./c34/c34dft.c -lm -o ./c34/c34dft
+            $CC ./c34/c50dft.c -lm -o ./c34/c50dft
+    
+            # Graw DFM06/09/17
+            $CC ./dfm/dfm06.c -lm -o ./dfm/dfm06
+            $CC ./dfm/dfm06ptu.c -lm -o ./dfm/dfm06ptu
+    
+            # Lockheed Martin LMS-6
+            cp ./ecc/bch_ecc.c ./lms6/
+            $CC ./lms6/lms6.c -lm -o ./lms6/lms6
+            $CC ./lms6/lms6ccsds.c -lm -o ./lms6/lms6ccsds
+            $CC ./lms6/lms6ecc.c -lm -o ./lms6/lms6ecc
+            $CC ./lms6/lmsX2446.c -lm -o ./lms6/lmsX2446
+    
+            # Meteomodem M10/20
+            $CC ./m10/m10ptu.c -lm -o ./m10/m10ptu
+            $CC ./m10/m10gtop.c -lm -o ./m10/m10gtop
+            $CC ./m10/m1x12_20160704.c -lm -o ./m10/m1x12_20160704
+            $CC ./m10/mXX_20180919.c -lm -o ./m10/mXX_20180919
+            $CC ./m10/m10ury20160721.c -lm -o ./m10/m10ury20160721
+            $CC ./m10/m10x.c -lm -o ./m10/m10x
+    
+            # Meisei
+            cp ./ecc/bch_ecc.c ./meisei/
+            $CC ./meisei/meisei_ecc.c -lm -o ./meisei/meisei_ecc
+            $CC ./meisei/meisei_ims.c -lm -o ./meisei/meisei_ims
+            $CC ./meisei/meisei_rs.c -lm -o ./meisei/meisei_rs
+    
+            # MK2A
+            $CC ./mk2a/mk2a.c -lm -o ./mk2a/mk2a
+            $CC ./mk2a/mk2a1680mod.c -lm -o ./mk2a/mk2a1680mod
+            $CC ./mk2a/mk2a_lms1680.c -lm -o ./mk2a/mk2a_lms1680
+            
+            # MRZ MP3-H1
+            $CC ./mrz/mp3h1.c -lm -o ./mrz/mp3h1
+    
+            # Vaisala RS41
+            cp ./ecc/bch_ecc.c ./rs41/
+            $CC ./rs41/rs41.c -lm -o ./rs41/rs41
+            $CC ./rs41/rs41ecc.c -lm -o ./rs41/rs41ecc
+            $CC ./rs41/rs41iq.c -lm -o ./rs41/rs41iq
+            $CC ./rs41/rs41ptu.c -lm -o ./rs41/rs41ptu
+            $CC ./rs41/rs41sg.c -lm -o ./rs41/rs41sg
+            
+            # Vaisala RS92
+            cp ./ecc/bch_ecc.c ./rs92/
+            $CC ./rs92/gps_navdata.c -lm -o ./rs92/gps_navdata
+            $CC ./rs92/rs92agp.c -lm -o ./rs92/rs92agp
+            $CC ./rs92/rs92agp_ecc.c -lm -o ./rs92/rs92agp_ecc
+            $CC ./rs92/rs92ecc.c -lm -o ./rs92/rs92ecc
+            $CC ./rs92/rs92gps.c -lm -o ./rs92/rs92gps
+            $CC ./rs92/rs92gps_2dfix.c -lm -o ./rs92/rs92gps_2dfix
+            
+            # Weathex 301D
+            $CC ./weathex/weathex301d.c -lm -o ./weathex/weathex301d
+            $CC ./weathex/weathex_20230512_401100kHz.c -lm -o ./weathex/weathex_20230512_401100kHz
+    
+            # IQ
+            $CC ./iq/shift_IQ.c -lm -o ./iq/shift_IQ
+            $CC ./iq/wavIQ.c -lm -o ./iq/wavIQ
+            
+            # RS Module
+            sed -i 's/^[[:space:]]*char weekday\[7\]\[4\]/extern char weekday[7][4]/' ./rs_module/rs_datum.h
+            $CC -c ./rs_module/rs_datum.c -o ./rs_module/rs_datum.o
+            $CC -c ./rs_module/rs_demod.c -o ./rs_module/rs_demod.o
+            $CC -c ./rs_module/rs_bch_ecc.c -o ./rs_module/rs_bch_ecc.o
+            $CC -c ./rs_module/rs_rs41.c -o ./rs_module/rs_rs41.o
+            $CC -c ./rs_module/rs_rs92.c -o ./rs_module/rs_rs92.o
+            $CC -c ./rs_module/rs_main41.c -o ./rs_module/rs_main41.o
+            $CC ./rs_module/rs_main41.o \
+                ./rs_module/rs_rs41.o \
+                ./rs_module/rs_bch_ecc.o \
+                ./rs_module/rs_demod.o \
+                ./rs_module/rs_datum.o \
+                -lm -o ./rs_module/rs41mod
+            $CC -c ./rs_module/rs_main92.c -o ./rs_module/rs_main92.o
+            $CC ./rs_module/rs_main92.o \
+                ./rs_module/rs_rs92.o \
+                ./rs_module/rs_bch_ecc.o \
+                ./rs_module/rs_demod.o \
+                ./rs_module/rs_datum.o \
+                -lm -o ./rs_module/rs92mod
+            
+            # Scan
+            $CC ./scan/dft_detect.c -lm -o ./scan/dft_detect
+            $CC ./scan/reset_usb.c -lm -o ./scan/reset_usb
+            $CC ./scan/rs_detect.c -lm -o ./scan/rs_detect
+            $CC ./scan/scan_fft_pow.c -lm -o ./scan/scan_fft_pow
+            $CC ./scan/scan_fft_simple.c -lm -o ./scan/scan_fft_simple
+    
+        - name: 📦 Archive ARMv7 binaries
+        uses: actions/upload-artifact@v4
+        with:
+            name: armv7-binaries
+            path: |
+              ./dropsonde/rd41drop
+              ./dropsonde/rd94drop
+              ./c34/c34dft
+              ./c34/c50dft
+              ./dfm/dfm06
+              ./dfm/dfm06ptu
+              ./lms6/lms6
+              ./lms6/lms6ccsds
+              ./lms6/lms6ecc
+              ./lms6/lmsX2446
+              ./m10/m10ptu
+              ./m10/m10gtop
+              ./m10/m1x12_20160704
+              ./m10/mXX_20180919
+              ./m10/m10ury20160721
+              ./m10/m10x
+              ./meisei/meisei_ecc
+              ./meisei/meisei_ims
+              ./meisei/meisei_rs
+              ./mk2a/mk2a
+              ./mk2a/mk2a1680mod
+              ./mk2a/mk2a_lms1680
+              ./mrz/mp3h1
+              ./rs41/rs41
+              ./rs41/rs41ecc
+              ./rs41/rs41iq
+              ./rs41/rs41ptu
+              ./rs41/rs41sg
+              ./rs92/gps_navdata
+              ./rs92/rs92agp
+              ./rs92/rs92agp_ecc
+              ./rs92/rs92ecc
+              ./rs92/rs92gps
+              ./rs92/rs92gps_2dfix
+              ./weathex/weathex301d
+              ./weathex/weathex_20230512_401100kHz
+              ./iq/shift_IQ
+              ./iq/wavIQ
+              ./rs_module/rs41mod
+              ./rs_module/rs92mod
+              ./scan/dft_detect
+              ./scan/reset_usb
+              ./scan/rs_detect
+              ./scan/scan_fft_pow
+              ./scan/scan_fft_simple
+    

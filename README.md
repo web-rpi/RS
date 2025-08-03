@@ -1,7 +1,7 @@
 RS
 ==
 
-[![Build](https://github.com/web-rpi/RS/actions/workflows/build.yml/badge.svg?event=check_run)](https://github.com/web-rpi/RS/actions/workflows/build.yml)  
+[![Build](https://github.com/web-rpi/RS/actions/workflows/build.yml/badge.svg)](https://github.com/web-rpi/RS/actions/workflows/build.yml)
 #### Wetterballon-Radiosonden  400-406 MHz  
 
 * Decoder: <br />

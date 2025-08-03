@@ -102,15 +102,13 @@ jobs:
             ./rs_module/rs_rs41.o \
             ./rs_module/rs_bch_ecc.o \
             ./rs_module/rs_demod.o \
-            ./rs_module/rs_datum.o \
-            -lm -o ./rs_module/rs41mod.exe
+            ./rs_module/rs_datum.o -lm -o ./rs_module/rs41mod.exe
         gcc -static -c ./rs_module/rs_main92.c -o ./rs_module/rs_main92.o
         gcc -static ./rs_module/rs_main92.o \
             ./rs_module/rs_rs92.o \
             ./rs_module/rs_bch_ecc.o \
             ./rs_module/rs_demod.o \
-            ./rs_module/rs_datum.o \
-            -lm -o ./rs_module/rs92mod.exe
+            ./rs_module/rs_datum.o -lm -o ./rs_module/rs92mod.exe
 
         # Scan #
         gcc -static ./scan/dft_detect.c -lm -o ./scan/dft_detect.exe

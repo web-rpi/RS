@@ -91,26 +91,26 @@ jobs:
         gcc -static ./iq/wavIQ.c -lm -o ./iq/wavIQ.exe
 
         # RS Module #
-        #sed -i 's/^[[:space:]]*char weekday\[7\]\[4\]/extern char weekday[7][4]/' ./rs_module/rs_datum.h
-        #gcc -static -c ./rs_module/rs_datum.c -o ./rs_module/rs_datum.o
-        #gcc -static -c ./rs_module/rs_demod.c -o ./rs_module/rs_demod.o
-        #gcc -static -c ./rs_module/rs_bch_ecc.c -o ./rs_module/rs_bch_ecc.o
-        #gcc -static -c ./rs_module/rs_rs41.c -o ./rs_module/rs_rs41.o
-        #gcc -static -c ./rs_module/rs_rs92.c -o ./rs_module/rs_rs92.o
-        #gcc -static -c ./rs_module/rs_main41.c -o ./rs_module/rs_main41.o
-        #gcc -static ./rs_module/rs_main41.o \
-        #    ./rs_module/rs_rs41.o \
-        #    ./rs_module/rs_bch_ecc.o \
-        #    ./rs_module/rs_demod.o \
-        #    ./rs_module/rs_datum.o \
-        #    -lm -o ./rs_module/rs41mod.exe
-        #gcc -static -c ./rs_module/rs_main92.c -o ./rs_module/rs_main92.o
-        #gcc -static ./rs_module/rs_main92.o \
-        #    ./rs_module/rs_rs92.o \
-        #    ./rs_module/rs_bch_ecc.o \
-        #    ./rs_module/rs_demod.o \
-        #    ./rs_module/rs_datum.o \
-        #    -lm -o ./rs_module/rs92mod.exe
+        sed -i 's/^[[:space:]]*char weekday\[7\]\[4\]/extern char weekday[7][4]/' ./rs_module/rs_datum.h
+        gcc -static -c ./rs_module/rs_datum.c -o ./rs_module/rs_datum.o
+        gcc -static -c ./rs_module/rs_demod.c -o ./rs_module/rs_demod.o
+        gcc -static -c ./rs_module/rs_bch_ecc.c -o ./rs_module/rs_bch_ecc.o
+        gcc -static -c ./rs_module/rs_rs41.c -o ./rs_module/rs_rs41.o
+        gcc -static -c ./rs_module/rs_rs92.c -o ./rs_module/rs_rs92.o
+        gcc -static -c ./rs_module/rs_main41.c -o ./rs_module/rs_main41.o
+        gcc -static ./rs_module/rs_main41.o \
+            ./rs_module/rs_rs41.o \
+            ./rs_module/rs_bch_ecc.o \
+            ./rs_module/rs_demod.o \
+            ./rs_module/rs_datum.o \
+            -lm -o ./rs_module/rs41mod.exe
+        gcc -static -c ./rs_module/rs_main92.c -o ./rs_module/rs_main92.o
+        gcc -static ./rs_module/rs_main92.o \
+            ./rs_module/rs_rs92.o \
+            ./rs_module/rs_bch_ecc.o \
+            ./rs_module/rs_demod.o \
+            ./rs_module/rs_datum.o \
+            -lm -o ./rs_module/rs92mod.exe
 
         # Scan #
         gcc -static ./scan/dft_detect.c -lm -o ./scan/dft_detect.exe

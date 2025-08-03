@@ -440,7 +440,7 @@ jobs:
               ./scan/scan_fft_pow
               ./scan/scan_fft_simple
 ### BUILD ARMv7 (RaspberryPi 3/4) ###
-   build-armv64:
+   build-arm64:
     runs-on: ubuntu-latest
     steps:
         - name: 📥 Checkout repository

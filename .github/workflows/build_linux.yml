@@ -22,36 +22,73 @@ jobs:
 
     - name: 🔧 Run gcc
       run: |
+        # Vaisala Dropsonde #
         gcc ./dropsonde/rd41drop.c -lm -o ./dropsonde/rd41drop
         gcc ./dropsonde/rd94drop.c -lm -o ./dropsonde/rd94drop
+        
+        # Meteolabor SRS-C3450
         gcc ./c34/c34dft.c -lm -o ./c34/c34dft
         gcc ./c34/c50dft.c -lm -o ./c34/c50dft
+
+        # Graw DFM06/09/17
         gcc ./dfm/dfm06.c -lm -o ./dfm/dfm06
         gcc ./dfm/dfm06ptu.c -lm -o ./dfm/dfm06ptu
+
+        # Lockheed Martin LMS-6
         cp ./ecc/bch_ecc.c ./lms6/
         gcc ./lms6/lms6.c -lm -o ./lms6/lms6
         gcc ./lms6/lms6ccsds.c -lm -o ./lms6/lms6ccsds
         gcc ./lms6/lms6ecc.c -lm -o ./lms6/lms6ecc
+        gcc ./lms6/lmsX2446.c -lm -o ./lms6/lmsX2446
+
+        # Meteomodem M10/20
         gcc ./m10/m10ptu.c -lm -o ./m10/m10ptu
+        gcc ./m10/m10gtop.c -lm -o ./m10/m10gtop
+        gcc ./m10/m1x12_20160704.c -lm -o ./m10/m1x12_20160704
+        gcc ./m10/mXX_20180919.c -lm -o ./m10/mXX_20180919
+        gcc ./m10/m10ury20160721.c -lm -o ./m10/m10ury20160721
+        gcc ./m10/m10x.c -lm -o ./m10/m10x
+
+        # Meisei
         cp ./ecc/bch_ecc.c ./meisei/
         gcc ./meisei/meisei_ecc.c -lm -o ./meisei/meisei_ecc
         gcc ./meisei/meisei_ims.c -lm -o ./meisei/meisei_ims
         gcc ./meisei/meisei_rs.c -lm -o ./meisei/meisei_rs
+
+        # MK2A
         gcc ./mk2a/mk2a.c -lm -o ./mk2a/mk2a
         gcc ./mk2a/mk2a1680mod.c -lm -o ./mk2a/mk2a1680mod
+        gcc ./mk2a/mk2a_lms1680.c -lm -o ./mk2a/mk2a_lms1680
+        
+        # MRZ MP3-H1
         gcc ./mrz/mp3h1.c -lm -o ./mrz/mp3h1
+
+        # Vaisala RS41
         cp ./ecc/bch_ecc.c ./rs41/
         gcc ./rs41/rs41.c -lm -o ./rs41/rs41
         gcc ./rs41/rs41ecc.c -lm -o ./rs41/rs41ecc
         gcc ./rs41/rs41iq.c -lm -o ./rs41/rs41iq
         gcc ./rs41/rs41ptu.c -lm -o ./rs41/rs41ptu
         gcc ./rs41/rs41sg.c -lm -o ./rs41/rs41sg
+        
+        # Vaisala RS92
         cp ./ecc/bch_ecc.c ./rs92/
+        gcc ./rs92/gps_navdata.c -lm -o ./rs92/gps_navdata
         gcc ./rs92/rs92agp.c -lm -o ./rs92/rs92agp
         gcc ./rs92/rs92agp_ecc.c -lm -o ./rs92/rs92agp_ecc
         gcc ./rs92/rs92ecc.c -lm -o ./rs92/rs92ecc
         gcc ./rs92/rs92gps.c -lm -o ./rs92/rs92gps
+        gcc ./rs92/rs92gps_2dfix.c -lm -o ./rs92/rs92gps_2dfix
+        
+        # Weathex 301D
         gcc ./weathex/weathex301d.c -lm -o ./weathex/weathex301d
+        gcc ./weathex/weathex_20230512_401100kHz.c -lm -o ./weathex/weathex_20230512_401100kHz
+
+        # IQ
+        gcc ./iq/shift_IQ.c -lm -o ./iq/shift_IQ
+        gcc ./iq/wavIQ.c -lm -o ./iq/wavIQ
+        
+        # RS Module
         sed -i 's/^[[:space:]]*char weekday\[7\]\[4\]/extern char weekday[7][4]/' ./rs_module/rs_datum.h
         gcc -c ./rs_module/rs_datum.c -o ./rs_module/rs_datum.o
         gcc -c ./rs_module/rs_demod.c -o ./rs_module/rs_demod.o
@@ -72,13 +109,14 @@ jobs:
             ./rs_module/rs_demod.o \
             ./rs_module/rs_datum.o \
             -lm -o ./rs_module/rs92mod
+        
+        # Scan
         gcc ./scan/dft_detect.c -lm -o ./scan/dft_detect
         gcc ./scan/reset_usb.c -lm -o ./scan/reset_usb
         gcc ./scan/rs_detect.c -lm -o ./scan/rs_detect
         gcc ./scan/scan_fft_pow.c -lm -o ./scan/scan_fft_pow
         gcc ./scan/scan_fft_simple.c -lm -o ./scan/scan_fft_simple
 
-        
     - name: 📦 Archive compiled binaries
       uses: actions/upload-artifact@v4
       with:
@@ -93,24 +131,36 @@ jobs:
           ./lms6/lms6
           ./lms6/lms6ccsds
           ./lms6/lms6ecc
+          ./lms6/lmsX2446
           ./m10/m10ptu
+          ./m10/m10gtop
+          ./m10/m1x12_20160704
+          ./m10/mXX_20180919
+          ./m10/m10ury20160721
+          ./m10/m10x
           ./meisei/meisei_ecc
           ./meisei/meisei_ims
           ./meisei/meisei_rs
           ./mk2a/mk2a
           ./mk2a/mk2a1680mod
+          ./mk2a/mk2a_lms1680
           ./mrz/mp3h1
           ./rs41/rs41
           ./rs41/rs41ecc
           ./rs41/rs41iq
           ./rs41/rs41ptu
           ./rs41/rs41sg
+          ./rs92/gps_navdata
           ./rs92/rs92agp
           ./rs92/rs92agp_ecc
           ./rs92/rs92ecc
           ./rs92/rs92gps
+          ./rs92/rs92gps_2dfix
           ./weathex/weathex301d
-          ./rs_module/rs42mod
+          ./weathex/weathex_20230512_401100kHz
+          ./iq/shift_IQ
+          ./iq/wavIQ
+          ./rs_module/rs41mod
           ./rs_module/rs92mod
           ./scan/dft_detect
           ./scan/reset_usb

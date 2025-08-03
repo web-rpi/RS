@@ -118,7 +118,7 @@ jobs:
 
         # Scan #
         gcc ./scan/dft_detect.c -lm -o ./scan/dft_detect.exe
-        gcc ./scan/reset_usb.c -lm -o ./scan/reset_usb.exe
+        # gcc ./scan/reset_usb.c -lm -o ./scan/reset_usb.exe # ToDo ... it's possible with win host? i dont think so ...
         gcc ./scan/rs_detect.c -lm -o ./scan/rs_detect.exe
         gcc ./scan/scan_fft_pow.c -lm -o ./scan/scan_fft_pow.exe
         gcc ./scan/scan_fft_simple.c -lm -o ./scan/scan_fft_simple.exe

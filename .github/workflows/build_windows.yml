@@ -28,6 +28,9 @@ jobs:
     - name: 🔧 Run gcc (MSYS2)
       shell: msys2 {0}
       run: |
+        export PATH=/mingw64/bin:$PATH # use mingw gcc for win native compile
+        gcc -v  # check gcc version
+        
         # Vaisala Dropsonde #
         gcc -static ./dropsonde/rd41drop.c -lm -o ./dropsonde/rd41drop.exe
         gcc -static ./dropsonde/rd94drop.c -lm -o ./dropsonde/rd94drop.exe

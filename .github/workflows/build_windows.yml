@@ -15,22 +15,15 @@ jobs:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
 
-    - name: 🛠️ Install MSYS2 and build tools
-      uses: msys2/setup-msys2@v2
-      with:
-        update: true
-        install: >-
-          base-devel
-          gcc
-          make
-          sed
+    - name: Install MinGW via Chocolatey
+      run: choco install mingw -y
 
-    - name: 🔧 Run gcc (MSYS2)
-      shell: msys2 {0}
+    - name: Add MinGW to PATH
       run: |
-        export PATH=/mingw64/bin:$PATH # use mingw gcc for win native compile
-        gcc -v  # check gcc version
-        
+          echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $env:GITHUB_PATH
+          
+    - name: 🔧 Run gcc (MinGW)
+      run: |   
         # Vaisala Dropsonde #
         gcc -static ./dropsonde/rd41drop.c -lm -o ./dropsonde/rd41drop.exe
         gcc -static ./dropsonde/rd94drop.c -lm -o ./dropsonde/rd94drop.exe
@@ -98,26 +91,26 @@ jobs:
         gcc -static ./iq/wavIQ.c -lm -o ./iq/wavIQ.exe
 
         # RS Module #
-        sed -i 's/^[[:space:]]*char weekday\[7\]\[4\]/extern char weekday[7][4]/' ./rs_module/rs_datum.h
-        gcc -static -c ./rs_module/rs_datum.c -o ./rs_module/rs_datum.o
-        gcc -static -c ./rs_module/rs_demod.c -o ./rs_module/rs_demod.o
-        gcc -static -c ./rs_module/rs_bch_ecc.c -o ./rs_module/rs_bch_ecc.o
-        gcc -static -c ./rs_module/rs_rs41.c -o ./rs_module/rs_rs41.o
-        gcc -static -c ./rs_module/rs_rs92.c -o ./rs_module/rs_rs92.o
-        gcc -static -c ./rs_module/rs_main41.c -o ./rs_module/rs_main41.o
-        gcc -static ./rs_module/rs_main41.o \
-            ./rs_module/rs_rs41.o \
-            ./rs_module/rs_bch_ecc.o \
-            ./rs_module/rs_demod.o \
-            ./rs_module/rs_datum.o \
-            -lm -o ./rs_module/rs41mod.exe
-        gcc -static -c ./rs_module/rs_main92.c -o ./rs_module/rs_main92.o
-        gcc -static ./rs_module/rs_main92.o \
-            ./rs_module/rs_rs92.o \
-            ./rs_module/rs_bch_ecc.o \
-            ./rs_module/rs_demod.o \
-            ./rs_module/rs_datum.o \
-            -lm -o ./rs_module/rs92mod.exe
+        #sed -i 's/^[[:space:]]*char weekday\[7\]\[4\]/extern char weekday[7][4]/' ./rs_module/rs_datum.h
+        #gcc -static -c ./rs_module/rs_datum.c -o ./rs_module/rs_datum.o
+        #gcc -static -c ./rs_module/rs_demod.c -o ./rs_module/rs_demod.o
+        #gcc -static -c ./rs_module/rs_bch_ecc.c -o ./rs_module/rs_bch_ecc.o
+        #gcc -static -c ./rs_module/rs_rs41.c -o ./rs_module/rs_rs41.o
+        #gcc -static -c ./rs_module/rs_rs92.c -o ./rs_module/rs_rs92.o
+        #gcc -static -c ./rs_module/rs_main41.c -o ./rs_module/rs_main41.o
+        #gcc -static ./rs_module/rs_main41.o \
+        #    ./rs_module/rs_rs41.o \
+        #    ./rs_module/rs_bch_ecc.o \
+        #    ./rs_module/rs_demod.o \
+        #    ./rs_module/rs_datum.o \
+        #    -lm -o ./rs_module/rs41mod.exe
+        #gcc -static -c ./rs_module/rs_main92.c -o ./rs_module/rs_main92.o
+        #gcc -static ./rs_module/rs_main92.o \
+        #    ./rs_module/rs_rs92.o \
+        #    ./rs_module/rs_bch_ecc.o \
+        #    ./rs_module/rs_demod.o \
+        #    ./rs_module/rs_datum.o \
+        #    -lm -o ./rs_module/rs92mod.exe
 
         # Scan #
         gcc -static ./scan/dft_detect.c -lm -o ./scan/dft_detect.exe
